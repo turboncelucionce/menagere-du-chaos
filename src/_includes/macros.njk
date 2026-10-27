@@ -1,0 +1,42 @@
+{#- Image ou vidéo d'une œuvre. Si une vidéo est fournie, l'image sert d'affiche avant la lecture. -#}
+{% macro media(image, video, description, bordure, legende, classe) -%}
+  {%- set cls = (classe or "illustration") + ("" if bordure else " sans-bordure") -%}
+  {%- if video %}
+  <video class="{{ cls }} video-oeuvre" controls playsinline preload="{{ 'none' if image else 'metadata' }}"{% if image %} poster="{{ image }}"{% endif %}{% if description %} aria-label="{{ description }}"{% endif %}>
+    <source src="{{ video }}" type="video/mp4">
+  </video>
+  {%- elif image %}
+  <img class="{{ cls }}" src="{{ image }}" alt="{{ description }}" loading="lazy">
+  {%- endif %}
+  {%- if legende %}
+  <p class="legende">{{ legende | mdInline | safe }}</p>
+  {%- endif %}
+{%- endmacro %}
+
+{#- Une œuvre (pages « En voie d'édition » et « En finalisation »). -#}
+{% macro oeuvre(item, gris) -%}
+  {%- set d = item.data -%}
+  {%- set aMedia = d.image or d.video -%}
+  <section class="bloc oeuvre{% if gris %} gris{% endif %}">
+    <div class="wrap duo{% if d.position == 'gauche' %} inverse{% endif %}{% if not aMedia %} seul{% endif %}">
+      <div class="texte">
+        {%- if d.genre %}<p class="surtitre">{{ d.genre }}</p>{% endif %}
+        <h2>{{ d.titre | mdInline | safe }}</h2>
+        {%- if d.sous_titre %}<p class="sous-titre">{{ d.sous_titre | mdInline | safe }}</p>{% endif %}
+        <div class="rule" aria-hidden="true"></div>
+        {{ item.content | typo | safe }}
+        {%- if d.extrait %}
+        <figure class="citation{% if d.extrait_dialogue %} dialogue{% endif %}">
+          <blockquote>{{ d.extrait | md | safe }}</blockquote>
+          {%- if d.extrait_legende %}<figcaption>{{ d.extrait_legende | mdInline | safe }}</figcaption>{% endif %}
+        </figure>
+        {%- endif %}
+      </div>
+      {%- if aMedia %}
+      <div class="visuel">
+        {{ media(d.image, d.video, d.image_description, d.bordure, d.legende_image) }}
+      </div>
+      {%- endif %}
+    </div>
+  </section>
+{%- endmacro %}

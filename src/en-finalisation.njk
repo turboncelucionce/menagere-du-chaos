@@ -1,0 +1,11 @@
+---
+layout: base.njk
+permalink: /en-finalisation/
+titre_page: "En finalisation"
+---
+{%- from "macros.njk" import oeuvre %}
+{%- for item in collections.oeuvres | rubrique("en-finalisation") %}
+{{ oeuvre(item, loop.index0 % 2 == 1) }}
+{%- else %}
+<section class="bloc"><div class="wrap"><p class="vide">Aucune œuvre dans cette rubrique pour le moment.</p></div></section>
+{%- endfor %}

@@ -1,0 +1,41 @@
+---
+layout: base.njk
+permalink: /contacts/
+titre_page: Contacts
+---
+<section class="bloc">
+  <div class="wrap contact-duo">
+    <form class="formulaire" id="formulaire" novalidate data-envoi="{{ reglages.formulaire_adresse_envoi }}" data-email="{{ reglages.email }}">
+      {%- for c in reglages.formulaire_champs_caches %}
+      <input type="hidden" name="{{ c.nom }}" value="{{ c.valeur }}">
+      {%- endfor %}
+      <input type="checkbox" name="botcheck" class="piege" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="champ">
+        <label for="f-nom">Votre nom</label>
+        <input id="f-nom" name="nom" type="text" autocomplete="name">
+      </div>
+      <div class="champ">
+        <label for="f-mail">Adresse e-mail <span class="req">*</span></label>
+        <input id="f-mail" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="champ">
+        <label for="f-tel">Téléphone</label>
+        <input id="f-tel" name="telephone" type="tel" autocomplete="tel">
+      </div>
+      <div class="champ">
+        <label for="f-message">Votre message <span class="req">*</span></label>
+        <textarea id="f-message" name="message" required></textarea>
+      </div>
+      <div class="mentions">{{ contacts.consentement | md | safe }}</div>
+      <button class="envoyer" type="submit">Envoyer</button>
+      <p class="retour" id="retour" role="status" hidden></p>
+    </form>
+
+    <aside class="coord">
+      <h2>{{ contacts.titre_coordonnees }}</h2>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="adresse" id="adresse">{{ reglages.email }}</p>
+      <button class="copier" type="button" id="copier">Copier l'adresse</button>
+    </aside>
+  </div>
+</section>

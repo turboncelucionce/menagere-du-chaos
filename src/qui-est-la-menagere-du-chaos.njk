@@ -1,0 +1,38 @@
+---
+layout: base.njk
+permalink: /qui-est-la-menagere-du-chaos/
+titre_page: "Qui est la Ménagère du Chaos ?"
+---
+<section class="bloc presentation">
+  <div class="wrap duo{% if not qui.portrait %} seul{% endif %}">
+    <div>
+      <h2 class="nom">{{ qui.titre_presentation | mdInline | safe }}</h2>
+      <div class="rule" aria-hidden="true"></div>
+      <div class="intro">{{ qui.presentation | md | safe }}</div>
+    </div>
+    {%- if qui.portrait %}
+    <div class="visuel">
+      <img class="portrait" src="{{ qui.portrait }}" alt="{{ qui.portrait_description }}" loading="lazy">
+    </div>
+    {%- endif %}
+  </div>
+</section>
+
+<section class="bloc gris">
+  <div class="wrap">
+    {%- for groupe in qui.groupes %}
+    <div class="biblio-groupe">
+      <h2>{{ groupe.titre | mdInline | safe }}</h2>
+      <div class="rule" aria-hidden="true"></div>
+      <ul class="biblio">
+        {%- for o in groupe.ouvrages %}
+        <li><span class="annee">{{ o.annee }}</span><span class="genre">{{ o.genre }}</span><span class="titre"><em>{{ o.titre | mdInline | safe }}</em></span>{% if o.details %}<span class="detail">{{ o.details | mdInline | petitesCapitales | safe }}</span>{% endif %}</li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endfor %}
+    {%- if qui.boate %}
+    <div class="boate">{{ qui.boate | md | safe }}</div>
+    {%- endif %}
+  </div>
+</section>

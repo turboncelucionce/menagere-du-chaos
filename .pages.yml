@@ -1,0 +1,381 @@
+# Configuration de l'interface d'édition Pages CMS (https://pagescms.org).
+# Ce fichier décrit les rubriques et les cases que voit Isabelle quand elle modifie le site.
+
+media:
+  input: src/medias
+  output: /medias
+  rename: safe
+
+content:
+  # ---------------------------------------------------------------- Œuvres
+  - name: oeuvres
+    label: Œuvres
+    type: collection
+    path: src/contenu/oeuvres
+    format: yaml-frontmatter
+    filename: "{titre}.md"
+    view:
+      fields: [titre, rubrique, ordre]
+      primary: titre
+      sort: [ordre, titre]
+      default:
+        sort: ordre
+        order: asc
+    fields:
+      - name: titre
+        label: Titre de l'œuvre
+        type: string
+        required: true
+      - name: sous_titre
+        label: Sous-titre (facultatif)
+        type: string
+        description: "Par exemple : Tome 2 : La Jeunesse"
+      - name: genre
+        label: Genre
+        type: string
+        description: "S'affiche en petites capitales au-dessus du titre. Par exemple : Roman, Nouvelles, Conte, Pièce de théâtre…"
+      - name: rubrique
+        label: Rubrique du site
+        type: select
+        required: true
+        description: Choisissez la page où l'œuvre apparaît. « Masquée » la retire du site sans la supprimer.
+        options:
+          values:
+            - name: en-voie-d-edition
+              label: En voie d'édition
+            - name: en-finalisation
+              label: En finalisation
+            - name: masquee
+              label: Masquée (n'apparaît pas sur le site)
+      - name: ordre
+        label: Position dans la rubrique
+        type: number
+        description: 1 = en haut de la page, 2 = juste en dessous, etc.
+      - name: body
+        label: Présentation
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+      - name: extrait
+        label: Extrait (facultatif)
+        type: rich-text
+        description: S'affiche en italique, en retrait, sous la présentation. Pensez aux guillemets « » si besoin.
+        options:
+          format: markdown
+          media: false
+      - name: extrait_dialogue
+        label: L'extrait est un dialogue de théâtre
+        type: boolean
+        description: "Si cette case est cochée, les noms de personnages mis en gras s'affichent en petites capitales. Exemple : **Le client** : Bonjour Madame…"
+      - name: extrait_legende
+        label: Légende sous l'extrait (facultatif)
+        type: string
+        description: "Par exemple : « Chassés du paradis »"
+      - name: image
+        label: Image (ou image d'affiche de la vidéo)
+        type: image
+        description: Si vous ajoutez aussi une vidéo, cette image s'affiche avant la lecture.
+        options:
+          path: src/medias/images
+          extensions: [jpg, jpeg, png, webp]
+      - name: image_description
+        label: Description de l'image
+        type: string
+        description: Une phrase qui décrit l'image, lue aux personnes malvoyantes.
+      - name: video
+        label: Vidéo (facultatif)
+        type: file
+        description: Format MP4 uniquement. Les vidéos trop lourdes sont compressées automatiquement après l'enregistrement.
+        options:
+          path: src/medias/videos
+          extensions: [mp4]
+      - name: position
+        label: Place de l'image
+        type: select
+        options:
+          values:
+            - name: droite
+              label: À droite du texte
+            - name: gauche
+              label: À gauche du texte
+      - name: bordure
+        label: Fin cadre gris autour de l'image
+        type: boolean
+        description: Utile pour les images à fond blanc.
+      - name: legende_image
+        label: Légende sous l'image (facultatif)
+        type: string
+
+  # ---------------------------------------------------------------- Actualité
+  - name: actualites
+    label: Actualité
+    type: collection
+    path: src/contenu/actualites
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{titre}.md"
+    view:
+      fields: [titre, date, masquer]
+      primary: titre
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: titre
+        label: Titre de l'annonce
+        type: string
+        required: true
+        description: "Par exemple : À paraître prochainement !"
+      - name: date
+        label: Date
+        type: date
+        description: Les annonces les plus récentes s'affichent en premier.
+      - name: masquer
+        label: Masquer cette annonce
+        type: boolean
+        description: Cochez pour retirer l'annonce du site sans la supprimer.
+      - name: body
+        label: Texte de l'annonce
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+      - name: lien_texte
+        label: Texte du lien (facultatif)
+        type: string
+        description: "Par exemple : Découvrir les Éditions OLNI"
+      - name: lien_adresse
+        label: Adresse du lien (facultatif)
+        type: string
+        description: "Par exemple : https://editions-olni.com/"
+      - name: image
+        label: Image (ou image d'affiche de la vidéo)
+        type: image
+        options:
+          path: src/medias/images
+          extensions: [jpg, jpeg, png, webp]
+      - name: image_description
+        label: Description de l'image
+        type: string
+      - name: video
+        label: Vidéo (facultatif)
+        type: file
+        options:
+          path: src/medias/videos
+          extensions: [mp4]
+      - name: bordure
+        label: Fin cadre gris autour de l'image
+        type: boolean
+      - name: legende_image
+        label: Légende sous l'image (facultatif)
+        type: string
+      - name: extrait
+        label: Extrait (facultatif)
+        type: rich-text
+        description: S'affiche sous l'annonce, sur fond gris, centré.
+        options:
+          format: markdown
+          media: false
+      - name: extrait_legende
+        label: Légende sous l'extrait (facultatif)
+        type: string
+
+  # ---------------------------------------------------------------- Accueil
+  - name: accueil
+    label: Accueil
+    type: file
+    path: src/_data/accueil.json
+    format: json
+    fields:
+      - name: bandeau_image
+        label: Image du grand bandeau
+        type: image
+        options:
+          path: src/medias/images
+      - name: bandeau_description
+        label: Description de l'image du bandeau
+        type: string
+      - name: origines_titre
+        label: Titre de la première partie
+        type: string
+      - name: origines
+        label: Texte de la première partie
+        type: rich-text
+        description: Chaque paragraphe devient une ligne précédée de « … ».
+        options:
+          format: markdown
+          media: false
+      - name: origines_image
+        label: Image de la première partie
+        type: image
+        options:
+          path: src/medias/images
+      - name: origines_image_description
+        label: Description de cette image
+        type: string
+      - name: profusion_titre
+        label: Titre de la seconde partie
+        type: string
+      - name: profusion_texte
+        label: Texte de la seconde partie
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+      - name: profusion_video
+        label: Vidéo de la seconde partie (facultatif)
+        type: file
+        options:
+          path: src/medias/videos
+          extensions: [mp4]
+      - name: profusion_image
+        label: Image de la seconde partie (ou image d'affiche de la vidéo)
+        type: image
+        options:
+          path: src/medias/images
+      - name: profusion_description
+        label: Description de cette image ou vidéo
+        type: string
+
+  # ---------------------------------------------------------------- Qui est la Ménagère du Chaos ?
+  - name: qui
+    label: Qui est la Ménagère du Chaos ?
+    type: file
+    path: src/_data/qui.json
+    format: json
+    fields:
+      - name: titre_presentation
+        label: Titre de la présentation
+        type: string
+      - name: presentation
+        label: Présentation
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+      - name: portrait
+        label: Portrait
+        type: image
+        options:
+          path: src/medias/images
+      - name: portrait_description
+        label: Description du portrait
+        type: string
+      - name: groupes
+        label: Bibliographie
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titre}"
+        fields:
+          - name: titre
+            label: Titre du groupe
+            type: string
+            description: "Par exemple : Œuvres publiées"
+          - name: ouvrages
+            label: Ouvrages
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{annee} · {titre}"
+            fields:
+              - name: annee
+                label: Année
+                type: string
+              - name: genre
+                label: Genre
+                type: string
+              - name: titre
+                label: Titre (s'affiche en italique)
+                type: string
+              - name: details
+                label: Précisions (éditeur, coauteur…)
+                type: string
+                description: Un nom de famille écrit en CAPITALES s'affiche en petites capitales.
+      - name: boate
+        label: Texte de fin de page (La BOATE)
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+
+  # ---------------------------------------------------------------- Contacts
+  - name: contacts
+    label: Contacts
+    type: file
+    path: src/_data/contacts.json
+    format: json
+    fields:
+      - name: consentement
+        label: Texte sous le formulaire
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+      - name: titre_coordonnees
+        label: Titre de la colonne de droite
+        type: string
+
+  # ---------------------------------------------------------------- Politique de confidentialité
+  - name: confidentialite
+    label: Politique de confidentialité
+    type: file
+    path: src/_data/confidentialite.json
+    format: json
+    fields:
+      - name: texte
+        label: Texte
+        type: rich-text
+        description: Les passages entre crochets qui commencent par « à compléter » sont surlignés en gris sur le site.
+        options:
+          format: markdown
+          media: false
+
+  # ---------------------------------------------------------------- Réglages
+  - name: reglages
+    label: Réglages du site (à modifier avec James)
+    type: file
+    path: src/_data/reglages.json
+    format: json
+    fields:
+      - name: titre_site
+        label: Nom du site
+        type: string
+      - name: sous_titre_site
+        label: Sous-titre du site
+        type: string
+      - name: autrice
+        label: Nom affiché en bas de page
+        type: string
+      - name: email
+        label: Adresse e-mail de contact
+        type: string
+      - name: description
+        label: Description du site (pour les moteurs de recherche)
+        type: text
+      - name: adresse_site
+        label: Adresse du site, sans barre finale
+        type: string
+        description: "Par exemple : https://www.lamenageereduchaos.fr"
+      - name: image_partage
+        label: Image affichée quand on partage le site
+        type: image
+        options:
+          path: src/medias/images
+      - name: formulaire_adresse_envoi
+        label: Adresse d'envoi du formulaire (technique)
+        type: string
+        description: Fournie par le service d'envoi de formulaires. Laisser vide tant que le service n'est pas choisi.
+      - name: formulaire_champs_caches
+        label: Champs cachés du formulaire (technique)
+        type: object
+        list: true
+        description: "Par exemple pour Web3Forms : nom = access_key, valeur = la clé fournie."
+        fields:
+          - name: nom
+            type: string
+          - name: valeur
+            type: string

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  {%- set titreComplet = (titre_page + " · " + reglages.titre_site) if titre_page else (reglages.titre_site + ", " + reglages.sous_titre_site) %}
+  <title>{{ titreComplet }}</title>
+  <meta name="description" content="{{ description or reglages.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="{{ reglages.titre_site }}">
+  <meta property="og:title" content="{{ titreComplet }}">
+  <meta property="og:description" content="{{ description or reglages.description }}">
+  {%- if reglages.adresse_site %}
+  <meta property="og:url" content="{{ reglages.adresse_site }}{{ page.url }}">
+  <meta property="og:image" content="{{ reglages.adresse_site }}{{ reglages.image_partage }}">
+  <link rel="canonical" href="{{ reglages.adresse_site }}{{ page.url }}">
+  {%- endif %}
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/assets/fonts/eb-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+{%- set menu = [
+  { url: "/", label: "Accueil" },
+  { url: "/actualite/", label: "Actualité" },
+  { url: "/en-voie-d-edition/", label: "En voie d'édition" },
+  { url: "/en-finalisation/", label: "En finalisation" },
+  { url: "/qui-est-la-menagere-du-chaos/", label: "Qui est la Ménagère du Chaos ?" },
+  { url: "/contacts/", label: "Contacts" }
+] %}
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">{{ reglages.titre_site }}</a>
+    <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Navigation principale">
+      <ul>
+        {%- for lien in menu %}
+        <li><a href="{{ lien.url }}"{% if page.url == lien.url %} aria-current="page"{% endif %}>{{ lien.label | typo | safe }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+{%- if titre_page and not sans_entete %}
+  <header class="page-tete">
+    <div class="wrap">
+      <p class="surtitre">{{ reglages.titre_site }}</p>
+      <h1>{{ titre_page | typo | safe }}</h1>
+      <div class="rule" aria-hidden="true"></div>
+    </div>
+  </header>
+{%- endif %}
+{{ content | safe }}
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-brand">{{ reglages.titre_site }}<small>{{ reglages.sous_titre_site }}</small></div>
+    <div class="contact">Contact : <span class="mail">{{ reglages.email }}</span></div>
+    <p class="copy">© {{ "" | annee }} {{ reglages.autrice }} · <a href="/politique-de-confidentialite/" class="lien-pied">Politique de confidentialité</a></p>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

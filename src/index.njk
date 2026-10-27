@@ -1,0 +1,54 @@
+---
+layout: base.njk
+permalink: /
+---
+<section class="hero" aria-label="{{ reglages.titre_site }}, {{ reglages.sous_titre_site }}" style="--photo: url('{{ accueil.bandeau_image }}')">
+  <div class="photo" role="img" aria-label="{{ accueil.bandeau_description }}"></div>
+  <div class="wrap">
+    <div class="titre">
+      <h1>La Ménagère <span class="l2">du Chaos</span></h1>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="subtitle">{{ reglages.sous_titre_site }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="bloc">
+  <div class="wrap duo{% if not accueil.origines_image %} seul{% endif %}">
+    <div>
+      <h2>{{ accueil.origines_titre | mdInline | safe }}</h2>
+      <div class="rule" aria-hidden="true"></div>
+      <ul class="origines">
+        {{ accueil.origines | md | enListe | safe }}
+      </ul>
+    </div>
+    {%- if accueil.origines_image %}
+    <div class="visuel">
+      <img class="couverture" src="{{ accueil.origines_image }}" alt="{{ accueil.origines_image_description }}">
+    </div>
+    {%- endif %}
+  </div>
+</section>
+
+<section class="bloc gris profusion">
+  <div class="wrap">
+    {%- if accueil.profusion_video %}
+    <figure class="bandeau-photo bandeau-video">
+      <video controls playsinline preload="{{ 'none' if accueil.profusion_image else 'metadata' }}"{% if accueil.profusion_image %} poster="{{ accueil.profusion_image }}"{% endif %} aria-label="{{ accueil.profusion_description }}">
+        <source src="{{ accueil.profusion_video }}" type="video/mp4">
+      </video>
+    </figure>
+    {%- elif accueil.profusion_image %}
+    <figure class="bandeau-photo">
+      <img src="{{ accueil.profusion_image }}" alt="{{ accueil.profusion_description }}" loading="lazy">
+    </figure>
+    {%- endif %}
+    <div class="profusion-texte">
+      <div>
+        <h2>{{ accueil.profusion_titre | mdInline | safe }}</h2>
+        <div class="rule" aria-hidden="true"></div>
+      </div>
+      <div class="profusion-corps">{{ accueil.profusion_texte | md | safe }}</div>
+    </div>
+  </div>
+</section>

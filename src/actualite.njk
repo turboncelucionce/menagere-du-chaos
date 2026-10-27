@@ -1,0 +1,39 @@
+---
+layout: base.njk
+permalink: /actualite/
+titre_page: Actualité
+---
+{%- from "macros.njk" import media %}
+{%- for item in collections.actualites %}
+{%- set d = item.data %}
+<section class="bloc annonce">
+  <div class="wrap duo{% if not (d.image or d.video) %} seul{% endif %}">
+    <div class="texte">
+      <h2>{{ d.titre | mdInline | safe }}</h2>
+      <div class="rule" aria-hidden="true"></div>
+      {{ item.content | typo | safe }}
+      {%- if d.lien_adresse %}
+      <p><a class="lien" href="{{ d.lien_adresse }}"{% if d.lien_adresse.startsWith('http') %} target="_blank" rel="noopener"{% endif %}>{{ d.lien_texte or d.lien_adresse }}</a></p>
+      {%- endif %}
+    </div>
+    {%- if d.image or d.video %}
+    <div class="visuel">
+      {{ media(d.image, d.video, d.image_description, d.bordure, d.legende_image) }}
+    </div>
+    {%- endif %}
+  </div>
+</section>
+{%- if d.extrait %}
+<section class="bloc gris">
+  <div class="wrap">
+    <figure class="extrait">
+      <p class="surtitre">Extrait</p>
+      <blockquote>{{ d.extrait | md | safe }}</blockquote>
+      {%- if d.extrait_legende %}<figcaption>{{ d.extrait_legende | mdInline | safe }}</figcaption>{% endif %}
+    </figure>
+  </div>
+</section>
+{%- endif %}
+{%- else %}
+<section class="bloc"><div class="wrap"><p class="vide">Pas d'actualité pour le moment.</p></div></section>
+{%- endfor %}

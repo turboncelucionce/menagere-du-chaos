@@ -1,0 +1,25 @@
+{
+  "titre_presentation": "Isabelle Augier-Jeannin !",
+  "presentation": "Née en 1962 à Marseille, je suis comédienne, metteuse en scène, chanteuse, médiatrice artistique, professeure de français, correctrice… et autrice !",
+  "portrait": "/medias/images/isabelle-augier-jeannin.jpg",
+  "portrait_description": "Portrait en noir et blanc d'Isabelle Augier-Jeannin, souriante, devant une bibliothèque",
+  "groupes": [
+    {
+      "titre": "Œuvres publiées",
+      "ouvrages": [
+        { "annee": "2012", "genre": "Formalisation de la pratique théâtrale", "titre": "Contribution d'une ouvrière du théâtre au bonheur du monde, pratique de l'atelier théâtre", "details": "Éditions de l'Harmattan" },
+        { "annee": "2019", "genre": "Pièce de théâtre", "titre": "Sinistroze", "details": "Commedia dell'arte, avec Pascal DAGUINOT · Éditions de l'Harmattan" },
+        { "annee": "2020", "genre": "Essai théâtralisé", "titre": "Et vous en vivez ?", "details": "Sur la précarité des artistes intervenants · Éditions de l'Harmattan" },
+        { "annee": "2022", "genre": "Abécédaire surréaliste", "titre": "La Rousse Ménagère", "details": "Éditions Maïa" }
+      ]
+    },
+    {
+      "titre": "Œuvres tout fraîchement éditées (fin 2024)",
+      "ouvrages": [
+        { "annee": "2024", "genre": "Formalisation de la pratique théâtrale", "titre": "Venez lui dire !, enjeux du théâtre-forum", "details": "BoD" },
+        { "annee": "2024", "genre": "Anthologie romancée", "titre": "Petits chaos personnels, anthologie romancée", "details": "BoD · Sous le nom de La Ménagère du Chaos !" }
+      ]
+    }
+  ],
+  "boate": "En ce qui concerne mon activité de transmission et de médiation artistique, on peut me suivre sur mon site La BOATE ! [www.la-boate.com](https://www.la-boate.com/)"
+}

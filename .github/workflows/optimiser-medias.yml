@@ -1,0 +1,75 @@
+# Compresse automatiquement les vidéos et les images trop lourdes ajoutées depuis Pages CMS.
+# - Vidéos MP4 de plus de 15 Mo : réencodées en H.264/AAC (largeur max. 1280 px, « faststart »).
+# - Images JPEG/PNG de plus de 1 Mo : redimensionnées à 2000 px max. et recompressées.
+# Le fichier .github/medias-optimises.txt garde l'empreinte des fichiers déjà traités,
+# pour ne jamais recompresser deux fois le même fichier.
+# Les commits faits par cette action (jeton GITHUB_TOKEN) ne relancent pas l'action.
+
+name: Optimisation des médias
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/medias/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: optimisation-medias
+  cancel-in-progress: false
+
+jobs:
+  optimiser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer ffmpeg et ImageMagick
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg imagemagick
+
+      - name: Compresser les médias trop lourds
+        run: |
+          set -euo pipefail
+          LISTE=.github/medias-optimises.txt
+          touch "$LISTE"
+          deja() { grep -qx "$(sha256sum "$1" | cut -d' ' -f1)" "$LISTE"; }
+          noter() { sha256sum "$1" | cut -d' ' -f1 >> "$LISTE"; }
+
+          shopt -s nullglob globstar nocaseglob
+          for f in src/medias/**/*.mp4; do
+            taille=$(stat -c%s "$f")
+            if [ "$taille" -gt 15728640 ] && ! deja "$f"; then
+              echo "Vidéo : $f ($((taille/1048576)) Mo)"
+              tmp="$(mktemp --suffix=.mp4)"
+              ffmpeg -v error -y -i "$f" -c:v libx264 -preset slow -crf 28 -pix_fmt yuv420p \
+                -vf "scale='min(1280,iw)':-2" -c:a aac -b:a 96k -movflags +faststart "$tmp"
+              if [ "$(stat -c%s "$tmp")" -lt "$taille" ]; then mv "$tmp" "$f"; else rm -f "$tmp"; fi
+              noter "$f"
+            fi
+          done
+
+          for f in src/medias/**/*.{jpg,jpeg,png}; do
+            taille=$(stat -c%s "$f")
+            if [ "$taille" -gt 1048576 ] && ! deja "$f"; then
+              echo "Image : $f ($((taille/1024)) Ko)"
+              mogrify -auto-orient -resize '2000x2000>' -strip -quality 85 "$f"
+              noter "$f"
+            fi
+          done
+
+      - name: Enregistrer les fichiers compressés
+        run: |
+          git config user.name "Optimisation des médias"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A src/medias .github/medias-optimises.txt
+          if git diff --cached --quiet; then
+            echo "Rien à compresser."
+          else
+            git commit -m "Compression automatique des médias trop lourds"
+            git push
+          fi
